@@ -1,33 +1,54 @@
 # AI Reply Analyzer
 
-**Designing AI that reads the customer, but never decides for the salesperson.**
+A product design case study: an AI assistant that reads a customer's reply, shows why it read it that way, and drafts three replies. The salesperson always decides and sends.
 
-A mobile product design case study: when a customer replies, an assistant reads their real attitude, shows why, and drafts three replies. The salesperson can correct the AI and always sends the message themselves.
+**▶️ Watch the prototype demo below.** 3 screens, 11 AI rules, 7 test runs.
 
-- **Role:** Product design (UX, UI, AI behaviour design) — Lim Win Hoong
-- **Tools:** Figma (design + design system), Claude (AI rules + testing)
-- **Status:** Designed screens and tested AI rules (6 cases plus one re-test, all pass). Not a live app.
-- **Figma:** [AI Reply-Analyzer section](https://www.figma.com/design/xwnP4Mt56GIUFXmkbfHKVT/Product_P?node-id=1110-250)
-- **Demo:** `demo/ai-reply-analyzer-prototype.mp4` (30-second clickable prototype)
-- **Related:** [AI Sales Follow-up Assistant](https://github.com/Rixlim/ai-sales-followup), the first half of the same sales flow
+## What This Does
 
----
+The first project, [AI Sales Follow-up Assistant](https://github.com/Rixlim/ai-sales-followup), covers the customer who has **not** replied. This one covers the customer who **has**.
 
-## 1. Problem
+A reply is easy to misread. "Thanks, looks good, we'll contact you if we need anything" sounds positive, but there is no date, no question and no next step, and most of these never come back. "Messages only, no calls" sounds neutral, but it means the customer wants distance. The design question was not "how do we classify a reply?" but **"how do we let AI read the customer without letting the salesperson trust a wrong read?"**
 
-The first project covers the customer who has **not** replied. This one covers the customer who **has**.
+This case is based on my own sales experience. All example messages are rewritten and contain no real names or companies. Design file: [Figma, AI Reply-Analyzer section](https://www.figma.com/design/xwnP4Mt56GIUFXmkbfHKVT/Product_P?node-id=1110-250).
 
-A reply is easy to misread. In my sales experience:
+Here is the clickable prototype:
 
-- "Thanks, looks good, we'll contact you if we need anything" sounds positive, but there is no date, no question and no next step. Most of these never come back.
-- "Please message only, no calls" sounds neutral, but it means the customer wants distance. Calling again makes it worse.
-- "We'll go back and think about it" often means the customer is comparing other providers. If they have already ordered elsewhere, chasing them wastes time.
+<!-- VIDEO: on GitHub, drag demo/ai-reply-analyzer-prototype.mp4 into the editor on the line below, then delete the fallback link line. -->
+[Fallback: open the demo video](demo/ai-reply-analyzer-prototype.mp4)
 
-A salesperson who misreads these either wastes follow-ups or pushes a customer who wants space. An AI that reads attitude can help, but a confident wrong guess is worse than no help. So the design question was **"how do we let AI read the customer without letting the salesperson trust a wrong read?"**
+## Key Features
 
-All example messages are rewritten from situations in my own sales work. They contain no real names or companies.
+- **Reads the attitude** — one of five: Interested, Polite decline, Keeping distance, Price pushback, Comparing others. Being polite is not counted as being interested.
+- **Shows why** — "Why AI thinks so" points to the customer's exact words, so the salesperson can check the read instead of trusting it.
+- **Salesperson can overrule** — an attitude picker lets the user correct the AI. If the user picks one, the AI uses it and does not argue.
+- **Three reply drafts** — Safe, Proactive and Short, each under 60 words, each with a Copy button.
+- **Refuses to guess** — when a reply is too short ("Noted, thanks."), the AI says "Not enough to tell", lists what is missing and writes no drafts.
+- **Never invents facts** — prices, discounts and deadlines use [PLEASE FILL IN]. No promises the salesperson never made.
+- **Reply language** — Auto-detect, English, Bahasa Melayu, Chinese or Arabic. Labels always stay in English.
+- **Respects the customer** — "Keeping distance" replies are short and never suggest a call. If the customer already chose another provider, the AI does not try to win them back.
 
-## 2. Scope: what I built and what I left out
+## Screens
+
+<table>
+  <tr>
+    <td align="center" width="33%"><a href="assets/01-input.png"><img src="assets/01-input.png" alt="Input page"></a><br><b>01 Input</b></td>
+    <td align="center" width="33%"><a href="assets/02-result.png"><img src="assets/02-result.png" alt="Result page"></a><br><b>02 Result</b></td>
+    <td align="center" width="33%"><a href="assets/03-unsure.png"><img src="assets/03-unsure.png" alt="Not enough to tell"></a><br><b>03 Not enough to tell</b></td>
+  </tr>
+</table>
+
+The screens reuse the colours, spacing, radius, text styles and Button from project 1. Two components were added to the design system: **Reply Card** and **Chip**.
+
+## How It Works
+
+1. The salesperson pastes the customer's reply, optionally adds background (the quote, earlier follow-ups) and picks a reply language (01).
+2. If the reply is too short to read reliably, the AI says "Not enough to tell", lists what is missing and writes no drafts (03).
+3. Otherwise it names one of five attitudes, with a confidence level and the words the read is based on (02).
+4. It writes three reply drafts, in the chosen language.
+5. The salesperson can change the attitude or language, copy a draft and send it themselves.
+
+## What I Built and What I Left Out
 
 | Feature | Decision | Why |
 |---|---|---|
@@ -43,7 +64,7 @@ All example messages are rewritten from situations in my own sales work. They co
 
 **Principle: the AI reads and drafts, the human decides and sends.**
 
-## 3. What AI can get wrong, and how the design responds
+## What AI Can Get Wrong, and How the Design Responds
 
 | AI risk | Design response |
 |---|---|
@@ -55,43 +76,73 @@ All example messages are rewritten from situations in my own sales work. They co
 | Chases a customer who already chose someone else | "Comparing others" rule: no win-back unless the customer says they want to keep talking price |
 | Reply in the wrong language | Language setting on the input page, and again on the result page |
 
-## 4. Screens
+Every result is also labelled "AI draft — please review before sending".
 
-| # | Screen | Purpose |
-|---|---|---|
-| 01 | Input | Paste the customer's reply, optional background, reply language, one button |
-| 02 | Result | Customer's words, AI's read and confidence, why, attitude picker, language, three reply cards with Copy |
-| 03 | Unsure | Shown when the AI cannot tell. Lists what is missing, no drafts, still lets the user pick an attitude |
+## AI Behaviour Rules
 
-![Input](assets/01-input.png) ![Result](assets/02-result.png) ![Unsure](assets/03-unsure.png)
+<details>
+<summary><b>Show the prompt (11 rules)</b></summary>
 
-**Design system:** the screens reuse the colours, spacing, radius, text styles and Button from project 1. Two new components were added to the design system: **Reply Card** and **Chip** (default and selected).
+```
+You are a sales reply analyst. A salesperson pastes a message their customer just sent. You read the customer's real attitude and draft replies the salesperson can review and send.
 
-## 5. AI behaviour rules (prompt)
+Input you may receive:
+- CUSTOMER REPLY (required): the customer's exact words
+- BACKGROUND (optional): what the salesperson sent before, such as the quote or follow-ups
+- REPLY LANGUAGE: Auto-detect, English, Bahasa Melayu, Chinese or Arabic
+- ATTITUDE (optional): an attitude the salesperson picked themselves
 
-The full prompt is in [`prompt.txt`](prompt.txt). Key rules:
+Attitudes (choose exactly one):
+1. Interested
+   Signals: a specific date or time to talk, questions about details, asks for a discount, says they are interested.
+   Reply direction: confirm the time, follow up on schedule, prepare an offer if the salesperson has one.
+2. Polite decline
+   Signals: friendly words but no date, no question and no next step ("will contact you if needed").
+   Reply direction: one short, warm closing message. Leave the door open. Do not chase.
+3. Keeping distance
+   Signals: several follow-ups with no response, refuses calls, wants messages only.
+   Reply direction: respect it. Short messages only, no calls, fewer follow-ups.
+4. Price pushback
+   Signals: keeps pushing the price down, suggests the price was inflated on purpose.
+   Reply direction: do not drop the price straight away. Explain the value and how the price is built.
+5. Comparing others
+   Signals: "will go back and think about it", no specific question, no date.
+   Reply direction: ask which points they are comparing and help them see the difference. Do not push.
+   If the customer already chose another provider, do not try to win them back. Only continue if they say they want to keep discussing the price.
 
-1. Being polite is not being interested. "Interested" needs a concrete signal.
-2. If the reply is not enough, say "Not enough to tell", list what is missing, and write no drafts.
-3. If the salesperson picked an attitude, use it and do not argue.
-4. Never invent prices, discounts, deadlines or promises. Use [PLEASE FILL IN].
-5. Each draft is under 60 words and sounds like a person.
-6. Drafts follow the chosen language. Labels (ATTITUDE, WHY and so on) always stay in English. This rule comes from a problem in project 1, where English output sometimes drifted into Chinese.
-7. Never suggest calling a customer who wants distance.
-8. Output only the fixed format, with nothing added before or after. If there is no customer reply, the only missing item is "Customer reply".
-9. Use [PLEASE FILL IN] only for a missing fact, never to mean "optional". With no background, do not refer to earlier messages or promise actions the input never mentioned.
+Rules:
+1. Being polite is not being interested. Choose Interested only when there is a concrete signal (a date, a question, a request for an offer). Tone alone is not enough.
+2. If the reply and background are not enough to decide, do not guess. Output "Not enough to tell", list what is missing, and write no reply drafts.
+3. If the salesperson picked an attitude, use it. Do not argue with it. Write the replies for that attitude.
+4. Never invent prices, discounts, deadlines, promises or facts. If a draft needs one, write [PLEASE FILL IN].
+5. Each reply draft is under 60 words and sounds like a real person, not a template.
+6. Reply language: if Auto-detect, write the drafts in the customer's language. Otherwise use the language selected. Always write ATTITUDE, CONFIDENCE, WHY, MISSING and WATCH OUT in English, whatever language the drafts are in.
+7. Never suggest phoning the customer when the attitude is Keeping distance.
+8. Output only the format below. No greetings, no notes before or after, and no text outside the REPLIES drafts in any language other than English.
+9. If CUSTOMER REPLY is missing or empty, output "Not enough to tell" with MISSING: Customer reply. Do not list the input fields.
+10. Use [PLEASE FILL IN: ...] only where a fact is missing, such as a price, date or offer. Never use it to mean "optional".
+11. Do not refer to earlier conversations, and do not promise actions (sending a summary, checking an offer), unless the input mentions them.
 
-| Attitude | Signals | Reply direction |
-|---|---|---|
-| Interested | Specific time, details, asks for a discount | Confirm the time, follow up on schedule |
-| Polite decline | Friendly, but no date, no question | One short closing message, leave the door open, do not chase |
-| Keeping distance | Several follow-ups unanswered, refuses calls | Short messages only, no calls |
-| Price pushback | Keeps pushing the price down | Explain the value and how the price is built before moving on price |
-| Comparing others | "Will go back and think", no question | Ask what they are comparing. No win-back if they already ordered elsewhere |
+Output format (when you can tell):
+ATTITUDE: [one of the five]
+CONFIDENCE: [High / Medium / Low]
+WHY: [1-2 sentences pointing to the exact words, or the missing signals]
+REPLIES:
+A (Safe): ...
+B (Proactive): ...
+C (Short): ...
+WATCH OUT: [the most common mistake a salesperson makes in this situation, one sentence]
 
-## 6. Testing
+Output format (when you cannot tell):
+ATTITUDE: Not enough to tell
+MISSING: [bulleted list of what to add]
+```
 
-Six test cases, run in a Claude Project with `prompt.txt` as the project instructions. Each test was a new chat with three lines: customer reply, background, reply language. Screenshots are in `assets/`.
+</details>
+
+## Testing
+
+I tested the rules with six customer situations plus one re-test, in a Claude Project with the prompt as the project instructions. Each test was a new chat with three lines: customer reply, background and reply language.
 
 | Test | Input | Expected | Result |
 |---|---|---|---|
@@ -103,37 +154,47 @@ Six test cases, run in a Claude Project with `prompt.txt` as the project instruc
 | F. No reply at all | The prompt with an empty customer reply | Not enough to tell. MISSING lists only "Customer reply". Nothing outside the format | **Pass after a fix.** Before the fix it listed the input fields and added a Chinese note outside the format (`test-f-before.png`). After rules 8 and 9: only "Customer reply" (`test-f.png`) |
 | G. Re-test of B on the updated prompt | Same as B, with rules 10 and 11 added | No "what we covered", no wrong placeholder | **Pass.** Polite decline, Medium. No reference to an earlier conversation and no wrong placeholder (`test-b-v2.png`). Draft B still offers to send details, but only "if it helps later" |
 
-### What changed because of testing and review
+<details>
+<summary><b>Show test screenshots</b></summary>
+
+<p>
+<a href="assets/test-a.png"><img src="assets/test-a.png" alt="Test A" width="280"></a><br><sub>Test A: Interested</sub><br><br>
+<a href="assets/test-b.png"><img src="assets/test-b.png" alt="Test B" width="280"></a><br><sub>Test B: Polite decline (first run)</sub><br><br>
+<a href="assets/test-b-v2.png"><img src="assets/test-b-v2.png" alt="Test B re-test" width="280"></a><br><sub>Test G: Test B again after rules 10 and 11</sub><br><br>
+<a href="assets/test-c.png"><img src="assets/test-c.png" alt="Test C" width="280"></a><br><sub>Test C: Keeping distance</sub><br><br>
+<a href="assets/test-d.png"><img src="assets/test-d.png" alt="Test D" width="280"></a><br><sub>Test D: Too short</sub><br><br>
+<a href="assets/test-e.png"><img src="assets/test-e.png" alt="Test E" width="280"></a><br><sub>Test E: Bahasa Melayu</sub><br><br>
+<a href="assets/test-f-before.png"><img src="assets/test-f-before.png" alt="Test F before the fix" width="280"></a><br><sub>Test F: no reply, before the fix</sub><br><br>
+<a href="assets/test-f.png"><img src="assets/test-f.png" alt="Test F after the fix" width="280"></a><br><sub>Test F: no reply, after the fix</sub>
+</p>
+
+</details>
+
+### What Changed Because of Testing and Review
 
 - **Rules 8 and 9 (from test F):** the first run listed the input fields as "missing" and added a Chinese note outside the format.
 - **Rules 10 and 11 (from tests B, C and E):** the same wrong placeholder appeared in three of six tests, and the AI referred to a conversation that the input never mentioned. These are small ways of inventing facts, so I added rules against both.
 - **Design changes after review:** added a picker so the user can change the attitude; kept "Why AI thinks so" so the read can be checked; gave the "Not enough to tell" screen the result-page header so it reads as a result; added the reply language setting.
 
-## 7. Known issues and limitations
+## Known Issues and Limitations
 
-- **Copy and paste for every reply is slow.** For a salesperson with dozens of customers it is a real cost. This prototype accepts that to test the idea first. See next version.
-- Only 6 test cases and one re-test. Not enough to claim reliability.
-- No user testing yet. Whether the reads feel right is my judgement, not a salesperson's.
-- "Price pushback" and "Comparing others" overlap when a customer says another provider is cheaper. This was not tested.
-- Arabic is shown in a left-to-right layout. A proper right-to-left layout is not designed.
-- Bahasa Melayu drafts have not been reviewed by a native speaker. Arabic and Chinese drafts were not tested.
-- The prototype is not connected to a live AI.
+- **Copy and paste is slow** — for a salesperson with dozens of customers it is a real cost. This prototype accepts that to test the idea first (see Next Version).
+- **Small sample** — only 6 test cases and one re-test. Not enough to claim reliability.
+- **No user testing yet** — whether the reads feel right is my judgement, not a salesperson's.
+- **Overlapping attitudes** — "Price pushback" and "Comparing others" overlap when a customer says another provider is cheaper. This was not tested.
+- **Arabic layout** — shown left-to-right. A proper right-to-left layout is not designed.
+- **Languages** — Bahasa Melayu drafts have not been reviewed by a native speaker. Arabic and Chinese drafts were not tested.
+- **Not a live app** — the prototype is not connected to a live AI.
 
-## 8. Next version
+## Next Version
 
-- **Less copying:** read the clipboard on open, then connect to WhatsApp or email so a new reply is analysed automatically.
-- **One thread per customer:** the AI remembers earlier messages, so Background is no longer typed by hand.
+- **Less copying** — read the clipboard on open, then connect to WhatsApp or email so a new reply is analysed automatically.
+- **One thread per customer** — the AI remembers earlier messages, so Background is no longer typed by hand.
 - **Right-to-left layout** for Arabic.
 - **Connect the form to an AI API** and run a working build.
-- **User testing:** 5 salespeople, measuring how often the AI's read is changed and how often a draft is sent unedited.
-- **Combine with project 1:** one flow, with no reply going to the follow-up draft and a reply going to the analyzer.
+- **User testing** — 5 salespeople, measuring how often the AI's read is changed and how often a draft is sent unedited.
+- **Combine with project 1** — one flow, with no reply going to the follow-up draft and a reply going to the analyzer.
 
-## Files
+## About
 
-```
-README.md
-prompt.txt    AI rules (section 5)
-demo/         prototype screen recording
-assets/       design screens (01-input, 02-result, 03-unsure)
-              test results (test-a to test-f, test-f-before, test-b-v2)
-```
+Designed by **Lim Win Hoong** — product design, UX and AI behaviour design. Tools: Figma, Claude.
