@@ -15,7 +15,9 @@ This case is based on my own sales experience. All example messages are rewritte
 Here is the clickable prototype:
 
 <!-- VIDEO: on GitHub, drag demo/ai-reply-analyzer-prototype.mp4 into the editor on the line below, then delete the fallback link line. -->
-[Fallback: open the demo video](demo/ai-reply-analyzer-prototype.mp4)
+
+https://github.com/user-attachments/assets/4352c8f1-da56-4eb1-93e7-373fc7ed2730
+
 
 ## Key Features
 
