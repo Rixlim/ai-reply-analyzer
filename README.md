@@ -34,9 +34,9 @@ https://github.com/user-attachments/assets/4352c8f1-da56-4eb1-93e7-373fc7ed2730
 
 <table>
   <tr>
-    <td align="center" width="33%"><a href="assets/01-input.png"><img src="assets/01-input.png" alt="Input page"></a><br><b>01 Input</b></td>
-    <td align="center" width="33%"><a href="assets/02-result.png"><img src="assets/02-result.png" alt="Result page"></a><br><b>02 Result</b></td>
-    <td align="center" width="33%"><a href="assets/03-unsure.png"><img src="assets/03-unsure.png" alt="Not enough to tell"></a><br><b>03 Not enough to tell</b></td>
+    <td align="center" valign="top" width="33%"><a href="assets/01-input.png"><img src="assets/01-input.png" alt="Input page"></a><br><b>01 Input</b></td>
+    <td align="center" valign="top" width="33%"><a href="assets/02-result.png"><img src="assets/02-result.png" alt="Result page"></a><br><b>02 Result</b></td>
+    <td align="center" valign="top" width="33%"><a href="assets/03-unsure.png"><img src="assets/03-unsure.png" alt="Not enough to tell"></a><br><b>03 Not enough to tell</b></td>
   </tr>
 </table>
 
